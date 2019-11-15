@@ -54,14 +54,11 @@ If the automatic linking fails for some reason, you can do the linking manually 
 
 
 ### Usage
-The module is simple to use. Just import the main module, call one of the twelve submodules and invoke the methods. The main module is imported like so:
+To schedule and manage notifications, first import the module to your app like so:
 
-```   import notification from 'react-native-android-notification';```
+```   import { Notification } from 'react-native-android-notification';```
 
-You can also use your custom name for the main module without any loss of functionality as below:
-
-```   import mySystemApp from 'react-native-android-notification';```
-
+After this, you can call any of the functions stated below to schedule an alarm.
 
 ## Functions
 <p style = "text-align: justify">The alarm module contains the following functions.</p>
@@ -75,7 +72,7 @@ You can also use your custom name for the main module without any loss of functi
 ```
 
 ## Events
-<p style = "text-align: justify">An event is emitted when the notification is firing whether the app in the foreground or background. If you want to handle the event while the app is in the foreground, you have to add <code>onNotification</code> listener to your app. One way to do this is as follows: </p>
+<p style = "text-align: justify">An event is emitted when the notification is firing whether the app in the foreground or background. If you want to handle the event while the app is in the foreground, you have to add <code>onNotification</code> listener in your app. One way to do this is as follows: </p>
 
 ``` 
 	import { DeviceEventEmitter } from "react-native";
@@ -104,14 +101,14 @@ The response data sent via the event emitter is the string representation of the
 <p style = "text-align: justify">In order to schedule and manage notifications, the following service should be added inside <code>application</code> tag of your AndroidManifest.xml file.</p>
 
 ```
-	<service android:name="com.sysapps.alarm.AlarmService"
+	<service android:name="com.sysapps.notification.alarm.AlarmService"
     		android:permission="android.permission.BIND_JOB_SERVICE" />
 ```
 
 <p id = "eventEmitter">To handle events when the app in the background, the following service should be registered in the AndroidManifest.xml file:</p>
 
  ```
-    <service android:name="com.sysapps.alarm.EventEmitter"/>
+    <service android:name="com.sysapps.notification.alarm.EventEmitter"/>
 ```
 
 <p style = "text-align: justify">Besides, add the following permissions outside the <code>application</code> tag of the AndroidManifest.xml file.</p>
@@ -142,22 +139,25 @@ You can also add any other key-value pairs in addition to the above so that you 
 ##### Sample code snippet
 
 ```
-        _scheduleNotification = () => {
-            const date = new Date(2019, 8, 1, 8, 30, 0); // Sep 01 2019 @ 8:30:00 AM        	 
+       import { Notification } from 'react-native-android-notification';
+       ....
+       ....
+       _scheduleNotification = () => {
+            const date = new Date(2019, 11, 1, 8, 30, 0); // Dec 01 2019 @ 8:30:00 AM        	 
         	const params = { 
-                "channelId": "abc123", 
-                "date": date.getTime(), 
-                "title": "my title", 
-                "content" : "my content", 
-                "key1": "value1", 
-                "key2": false, 
-                "key3": 14123 
+                	"channelId": "abc123", 
+                	"date": date.getTime(), 
+                	"title": "my title", 
+                	"content" : "my content", 
+                	"key1": "value1", 
+                	"key2": false, 
+               		"key3": 14123 
         	};
-        	Sysapps.alarm.schedule(params);
+        	Notification.schedule(params);
         } 
  ```
 
-<p style = "text-align: justify">Invoking the <code>_scheduleNotification()</code> function schedules an alarm to be fired on Sep 01 2019 @ 8:30:00 AM local time. When the notification is fired an event will also be emitted and the string representation of the <code>params</code> field defined within the function will be sent back as a response.</code></p>
+<p style = "text-align: justify">Invoking the <code>_scheduleNotification()</code> function schedules an alarm to be fired on Dec 01 2019 @ 8:30:00 AM local time. When the notification is fired an event will also be emitted and the string representation of the <code>params</code> field defined within the function will be sent back as a response.</code></p>
 
 #### update(Object options): 
 
@@ -166,12 +166,15 @@ You can also add any other key-value pairs in addition to the above so that you 
 ##### Sample code snippet
 
 ```
-        _updateNotif_abc123 = () => {
-            const date = new Date(2019, 8, 2, 8, 30, 0); // Sep 02 2019 @ 8:30:00 AM  
-        	Sysapps.alarm.update({ "channelId": "abc123", "date": date.getTime() });        	
+        import { Notification } from 'react-native-android-notification';
+       	....
+       	....
+	_updateNotif_abc123 = () => {
+            const date = new Date(2019, 11, 2, 8, 30, 0); // Dec 02 2019 @ 8:30:00 AM  
+        	Notification.update({ "channelId": "abc123", "date": date.getTime() });        	
         } 
 ```
-<p style = "text-align: justify">Invoking the <code>_updateNotif_abc123()</code> function updates a scheduled notification with <code>channelId</code> of <code>abc123</code> by changing the date when the notification will be posted to Sep 02 2019 @ 8:30:00 AM local time.</p>
+<p style = "text-align: justify">Invoking the <code>_updateNotif_abc123()</code> function updates a scheduled notification with <code>channelId</code> of <code>abc123</code> by changing the date when the notification will be posted to Dec 02 2019 @ 8:30:00 AM local time.</p>
 
 #### refer(String channelId): 
 
@@ -180,8 +183,11 @@ You can also add any other key-value pairs in addition to the above so that you 
 ##### Sample code snippet
 
 ```
-            _referScheduledNotif = async () => {
-                const params = await Sysapps.alarm.refer("abc123");
+            import { Notification } from 'react-native-android-notification';
+       		....
+       		....
+	    _referScheduledNotif = async () => {
+                const params = await Notification.refer("abc123");
                 console.log(params);
             } 
 ```
@@ -194,8 +200,11 @@ You can also add any other key-value pairs in addition to the above so that you 
 ##### Sample code snippet
 
 ```
-            _cancelNotification = () => {
-                Sysapps.alarm.cancel("abc123");
+            import { Notification } from 'react-native-android-notification';
+       		....
+       		....
+	    _cancelNotification = () => {
+                Notification.cancel("abc123");
             } 
 ```
 <p style = "text-align: justify">Invoking the <code>_cancelNotification()</code> cancels an alarm notification having a <code>channelId</code> of <code>abc123</code>.</p>
@@ -207,13 +216,17 @@ You can also add any other key-value pairs in addition to the above so that you 
 ##### Sample code snippet
 
 ```
+	    import { Notification } from 'react-native-android-notification';
+       		....
+       		....
             _cancelAllNotifications = () => {
-                Sysapps.alarm.cancelAll();
+                Notification.cancelAll();
             } 
 ```
 <p style = "text-align: justify">Invoking the <code>_cancelAllNotifications()</code> function cancels all notifications scheduled via the <code>schedule()</code> function and deletes the corresponding data.</p>
 
-
-
 ## Issues or suggestions?
-In some cases, the module might work only for devices with higher API levels. You might have issues if you are working with older API levels. For such and other  issues or if you want to suggest something , you can write it [here](https://github.com/Asaye/react-native-system-applications/issues).
+If you have any issues or if you want to suggest something , you can write it [here](https://github.com/Asaye/react-native-system-applications/issues).
+
+## Additional info
+This is a component of a more comprehensive [react-native-system-applications](https://www.npmjs.com/package/react-native-system-applications) module developed by the same author.
