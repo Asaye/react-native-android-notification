@@ -1,6 +1,6 @@
 # react-native-android-notification
 
-<p style = "text-align: justify">A simple react-native module which is used to schedule and manage local notifications on android phones. It can also be used as an alarm. Events will also be fired when the implementing app is in the foreground or in the background.
+<p style = "text-align: justify">A simple react-native module which is used to schedule and manage local notifications on android phones. It can also be used as an alarm. Events will be fired whether the implementing app is in the foreground or in the background.
 
 # Getting Started
 
